@@ -7,29 +7,77 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead title={"braxtonbarr.ca"} description={"projects, ideas, unfiltered"} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1> Hello </h1>
-			<p>
-				My site is a work in progress. 
-			</p>
-			<p>Here are some things you can expect:</p>
-			<ul>
-				<li>Projects</li>
-				<li>Resume</li>
-				<li>Social Links</li>
-				<li>Blog Posts/Research</li>
-			<p> 
-			Bonne Nuit
+  <head>
+    <BaseHead title={"braxtonbarr.ca"} description={"projects, ideas, unfiltered"} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <div class="hero-title-wrapper">
+        <h1 class="wavy-blur-title">Hello.</h1>
+      </div>
 
-			- Braxton 
-			</p>
-			</ul>
-		</main>
-		<Footer />
-	</body>
+      <p>My site is a work in progress.</p>
+      <p>Here are some things you can expect:</p>
+      <ul>
+        <li>Projects</li>
+        <li>Resume</li>
+        <li>Social Links</li>
+        <li>Blog Posts/Research</li>
+      </ul>
+      <p>Bonne Nuit - Braxton</p>
+    </main>
+    <Footer />
+
+    <style>
+      .hero-title-wrapper {
+        text-align: center;
+        margin: 2em 0;
+      }
+
+      .wavy-blur-title {
+        display: inline-block;
+        font-size: 8rem;
+        font-weight: bold;
+        color: black;
+        transition: filter 0.05s ease-out, text-shadow 0.05s ease-out;
+      }
+    </style>
+
+    <script>
+      const title = document.querySelector('.wavy-blur-title');
+
+      title.addEventListener('mousemove', (e) => {
+        const rect = title.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const dx = x - centerX;
+        const dy = y - centerY;
+
+        const distance = Math.sqrt(dx*dx + dy*dy);
+        const maxDistance = Math.sqrt(centerX*centerX + centerY*centerY);
+
+        // Blur intensity based on distance from center (strongest at center)
+        const blurAmount = ((maxDistance - distance) / maxDistance) * 12; // max 12px
+
+        // Directional offset: normalized -1 to 1 for x and y
+        const offsetX = -dx / centerX * blurAmount;
+        const offsetY = -dy / centerY * blurAmount;
+
+        // Apply directional blur using filter + text-shadow
+        title.style.filter = `blur(${blurAmount}px)`;
+        title.style.textShadow = `
+          ${offsetX}px ${offsetY}px ${blurAmount/2}px rgba(0,0,0,0.3)
+        `;
+      });
+
+      title.addEventListener('mouseleave', () => {
+        title.style.filter = 'blur(0px)';
+        title.style.textShadow = 'none';
+      });
+    </script>
+  </body>
 </html>
